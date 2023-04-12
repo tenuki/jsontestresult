@@ -280,7 +280,7 @@ class JsonTestResult(TestResult):
             self.stream.flush()
 
 
-class ExtendedTestCase(TestCase):
+class TestCaseWithNumStats(TestCase):
     def setUp(self) -> None:
         self._numstat = {}
 
