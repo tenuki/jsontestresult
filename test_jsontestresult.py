@@ -3,11 +3,13 @@ import sys
 from contextlib import contextmanager
 from unittest import TestCase, TextTestRunner, TestLoader
 
-from jsontestresult import JsonTestResult
+from jsontestresult import JsonTestResult, TestCaseWithNumStats
 
 
-class MyBasicTest(TestCase):
+class MyBasicTest(TestCaseWithNumStats):
     def testSomething(self):
+        self.addNumStat('speed', 66)
+        self.addNumStat('gas', 42)
         self.assertEqual(4, 2 * 2)
 
     def testSomethingFailed(self):
@@ -48,8 +50,11 @@ class TestTest(TestCase):
             suite = TestLoader().loadTestsFromTestCase(MyBasicTest)
             results = runner.run(suite)
         expected = {
-            'stats': {'ok': 1, 'skip': 0, 'error': 1, 'expected fail': 0, 'unexpected success': 0, 'fail': 1},
+            'stats': {'ok': 1, 'skip': 0, 'error': 1, 'expected fail': 0, 'unexpected success': 0, 'fail': 1,
+                      'gas': 42, 'speed': 66},
             'raw_results': [{'testSomething (__main__.MyBasicTest)': 'ok'},
+                            {'testSomething (__main__.MyBasicTest).speed': 66},
+                            {'testSomething (__main__.MyBasicTest).gas': 42},
                             {'testSomethingError (__main__.MyBasicTest)': 'ERROR'},
                             {'testSomethingFailed (__main__.MyBasicTest)': 'FAIL'}]}
         self.assertEqual(expected, results.json())
