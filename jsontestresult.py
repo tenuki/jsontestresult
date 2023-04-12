@@ -267,14 +267,9 @@ class JsonTestResult(TestResult):
             for test in unexpectedSuccesses:
                 self.stream.writeln(f"UNEXPECTED SUCCESS: {getDescription(test)}")
             self.stream.flush()
-        """
-            self.stream.writeln(self.separator1)
-            self.stream.writeln("%s: %s" % (flavour, getDescription(test)))
-            self.stream.writeln(self.separator2)
-            self.stream.writeln("%s" % err)
-            self.stream.flush()
-        """
-        print(json.dumps(self.json(), indent=4))
+        for line in json.dumps(self.json(), indent=4).splitlines():
+            self.stream.writeln(line)
+        self.stream.flush()
 
     def printErrorList(self, flavour, errors):
         for test, err in errors:
