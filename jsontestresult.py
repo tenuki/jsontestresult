@@ -284,5 +284,5 @@ class TestCaseWithNumStats(TestCase):
     def setUp(self) -> None:
         self._numstat = {}
 
-    def addNumStat(self, name, value):
-        self._numstat[name] = value
+    def addNumStat(self, name, value, default=0):
+        self._numstat[name] = self._numstat.get(name, default)+value
