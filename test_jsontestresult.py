@@ -50,13 +50,25 @@ class TestTest(TestCase):
             suite = TestLoader().loadTestsFromTestCase(MyBasicTest)
             results = runner.run(suite)
         expected = {
-            'stats': {'ok': 1, 'skip': 0, 'error': 1, 'expected fail': 0, 'unexpected success': 0, 'fail': 1,
-                      'gas': 42, 'speed': 66},
-            'raw_results': [{'testSomething (__main__.MyBasicTest)': 'ok'},
-                            {'testSomething (__main__.MyBasicTest).speed': 66},
-                            {'testSomething (__main__.MyBasicTest).gas': 42},
-                            {'testSomethingError (__main__.MyBasicTest)': 'ERROR'},
-                            {'testSomethingFailed (__main__.MyBasicTest)': 'FAIL'}]}
+            'stats': {
+                'error': 1,
+                'unexpected success': 0,
+                'ok': 1,
+                'skip': 0,
+                'expected fail': 0,
+                'fail': 1,
+                'speed': 66,
+                'gas': 42
+            },
+            'raw_results': {
+                'testSomething (__main__.MyBasicTest)': 'ok',
+                'testSomething (__main__.MyBasicTest).speed': 66,
+                'testSomething (__main__.MyBasicTest).gas': 42,
+                'testSomethingError (__main__.MyBasicTest)': 'ERROR',
+                'testSomethingFailed (__main__.MyBasicTest)': 'FAIL'
+            }
+        }
+        self.maxDiff = None
         self.assertEqual(expected, results.json())
 
 

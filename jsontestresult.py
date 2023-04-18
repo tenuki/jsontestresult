@@ -80,7 +80,7 @@ class CompositeLineInfo(TestLineInfo):
 
 class TestLineRecorder(TestLineInfo):
     def __init__(self):
-        self.raw_results = []
+        self.raw_results = {}
         self.stats = {}
         for category in TestResultCategories:
             self.stats[category] = 0
@@ -107,13 +107,22 @@ class TestLineRecorder(TestLineInfo):
 
     def genericAddTest(self, category, test, msg):
         self.addRawStat(category, 1)
-        self.raw_results.append({getDescription(test): msg})
+        self._add_raw(getDescription(test), msg)
+
+    def _add_raw(self, at, value):
+        current = self.raw_results.get(at)
+        if current is None:
+            self.raw_results[at] = value
+        elif isinstance(current, list):
+            current.append(value)
+        else:
+            self.raw_results[at] = [current, value]
 
     def addNumStat(self, test, name, value):
         label = getDescription(test)+'.'+name
         category = label.rsplit('.', 1)[1]
         self.addRawStat(category, value)
-        self.raw_results.append({label: value})
+        self._add_raw(label, value)
 
     def addSuccess(self, test):
         self.genericAddTest(RESULT_OK, test, 'ok')
